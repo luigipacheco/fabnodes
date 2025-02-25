@@ -1,0 +1,41 @@
+schema_version = "1.0.0"
+
+# Unique identifier for your addon
+id = "Fabnodes Exporter"
+
+# Version number of your addon
+version = "0.0.1"
+
+# Display name of the addon
+name = "Fabnodes Exporter"
+
+# Short description of the addon
+tagline = "Generates G-Code for 3D printers, CNC and Pen Plotter and laser machines from geometry node attributes."
+
+# Your name and contact email
+maintainer = "Luis Pacheco <luigi@neobrutal.com >"
+
+# Addon type
+type = "add-on"
+
+# # Optional: link to documentation, support, source files, etc.
+# website = "https://www.luigipacheco.com"
+
+# # Optional: relevant tags from Blender's official tag list
+# # Full list: https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
+tags = ["Import-Export", "Geometry Nodes", "Text Editor"]
+
+# Minimum Blender version required for your addon
+blender_version_min = "4.2.0"
+
+# # Optional: Maximum supported Blender version (if needed)
+# blender_version_max = "5.1.0"
+
+# License (Blender extensions must be GPL-compatible)
+license = [
+  "SPDX:GPL-3.0-or-later"
+]
+#copyright
+    copyright = [
+   "2025 Luis Pacheco"
+ ]
