@@ -1,19 +1,19 @@
 schema_version = "1.0.0"
 
 # Unique identifier for your addon
-id = "Fabnodes Exporter"
+id = "Fabnodes"
 
 # Version number of your addon
 version = "0.0.1"
 
 # Display name of the addon
-name = "Fabnodes Exporter"
+name = "Fabnodes"
 
 # Short description of the addon
-tagline = "Generates G-Code for 3D printers, CNC and Pen Plotter and laser machines from geometry node attributes."
+tagline = "Generates G-Code from geometry node attributes"
 
 # Your name and contact email
-maintainer = "Luis Pacheco <luigi@neobrutal.com >"
+maintainer = "Luis Pacheco <luigi@neobrutal.com>"
 
 # Addon type
 type = "add-on"
