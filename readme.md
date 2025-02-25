@@ -22,3 +22,5 @@ TO DO
  - UI to connect/disconnect serial
  - Send custom G-Code commands
  - Jogging (manual movement) controls in UI
+
+this project takes inspiration from other projects like g-code exporter by Alessandro zomparelli .
