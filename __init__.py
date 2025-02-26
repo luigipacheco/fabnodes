@@ -95,7 +95,7 @@ class FABNODES_OT_ExportGCode(Operator):
             self.report({"WARNING"}, "No object selected.")
             return {"CANCELLED"}
 
-        filename = f"{obj.name}.nc"
+        filename = f"{obj.name}.gcode"
 
         # Get user settings
         mode = scene_props.mode
