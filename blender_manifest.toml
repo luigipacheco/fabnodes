@@ -4,7 +4,7 @@ schema_version = "1.0.0"
 id = "Fabnodes"
 
 # Version number of your addon
-version = "0.0.1"
+version = "0.0.2"
 
 # Display name of the addon
 name = "Fabnodes"

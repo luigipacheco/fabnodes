@@ -3,7 +3,7 @@ bl_info = {
     "author": "Luis Pacheco",
     "description": "Export geometry node toolpaths to G-code",
     "blender": (4, 0, 3),
-    "version": (0, 1, 0),
+    "version": (0, 0, 2),
     "category": "3D View"
 }
 
@@ -20,7 +20,7 @@ class FABNODES_Properties(PropertyGroup):
         description="G-code export mode",
         items=[('cnc', 'CNC', ''), ('3dp', '3D Printer', ''), ('draw', 'Drawing', ''), ('laser', 'Laser', '')]
     )
-    speed: FloatProperty(name="Speed", description="Feed rate", default=50.0, step=100, precision=2, min=0.0, max=10000.0) 
+    speed: FloatProperty(name="Speed", description="Feed rate", default=1000.0, step=10, precision=2, min=0.0, max=10000.0) 
     power: FloatProperty(name="Power", description="Laser power or similar", default=50.0, step=100, precision=2, min=0.0, max=1000.0)
     extrude: FloatProperty(name="Extrude", description="Extrusion amount", default=0.0, step=100, precision=2 , min=0.0, max=1000.0)
     speeda: BoolProperty(name="Use Speed Attribute", default=False)
@@ -34,7 +34,7 @@ class FABNODES_Properties(PropertyGroup):
 
 # ---- UI Panel ----
 class FABNODES_PT_ExporterPanel(Panel):
-    bl_label = "Fabnodes Exporter"
+    bl_label = "Fabnodes"
     bl_idname = "FABNODES_PT_exporter"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -51,21 +51,21 @@ class FABNODES_PT_ExporterPanel(Panel):
 
         # Speed Row (Fix: Separate checkbox & slider)
         row = layout.row(align=True)
-        row.prop(scene_props, "speeda", text="Use Speed Attribute")  # Checkbox always enabled
+        row.prop(scene_props, "speeda", text="Use 'speed' Attribute")  # Checkbox always enabled
         sub = row.row(align=True)
         sub.enabled = not scene_props.speeda  # Only disable the slider, NOT the checkbox
         sub.prop(scene_props, "speed", text="Speed (F)", slider=True)
 
         # Extrude Row
         row = layout.row(align=True)
-        row.prop(scene_props, "extrudea", text="Use Extrude Attribute")
+        row.prop(scene_props, "extrudea", text="Use 'extrude' Attribute")
         sub = row.row(align=True)
         sub.enabled = not scene_props.extrudea
         sub.prop(scene_props, "extrude", text="Extrude (E)", slider=True)
 
         # Power Row
         row = layout.row(align=True)
-        row.prop(scene_props, "powera", text="Use Power Attribute")
+        row.prop(scene_props, "powera", text="Use 'power' Attribute")
         sub = row.row(align=True)
         sub.enabled = not scene_props.powera
         sub.prop(scene_props, "power", text="Power (S)", slider=True)
