@@ -4,7 +4,8 @@ bl_info = {
     "description": "Export geometry node toolpaths to G-code",
     "blender": (4, 0, 3),
     "version": (0, 0, 2),
-    "category": "3D View"
+    "location": "View3D > Sidebar > Fabnodes",
+    "category": "Import-Export"
 }
 
 import bpy
@@ -14,7 +15,7 @@ from .gcode_python import GCode
 
 
 # ---- Property Group for Scene Settings ----
-class FABNODES_Properties(PropertyGroup):
+class GcodeExportProperties(PropertyGroup):
     mode: EnumProperty(
         name="Mode",
         description="G-code export mode",
@@ -33,9 +34,9 @@ class FABNODES_Properties(PropertyGroup):
 
 
 # ---- UI Panel ----
-class FABNODES_PT_ExporterPanel(Panel):
+class VIEW3D_PT_gcode_exporter(Panel):
     bl_label = "Fabnodes"
-    bl_idname = "FABNODES_PT_exporter"
+    bl_idname = "VIEW3D_PT_gcode_exporter"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'Fabnodes'
@@ -78,12 +79,12 @@ class FABNODES_PT_ExporterPanel(Panel):
             layout.prop(scene_props, "start_gcode", text="START")
             layout.prop(scene_props, "end_gcode", text="END")
 
-        layout.operator("fabnodes.export_gcode", text="Export G-code")
+        layout.operator("object.gcode_export", text="Export G-code")
 
 
 # ---- Operator to Export G-code ----
-class FABNODES_OT_ExportGCode(Operator):
-    bl_idname = "fabnodes.export_gcode"
+class OBJECT_OT_gcode_export(Operator):
+    bl_idname = "object.gcode_export"
     bl_label = "Export G-code"
     bl_options = {"REGISTER", "UNDO"}
 
@@ -162,17 +163,17 @@ class FABNODES_OT_ExportGCode(Operator):
 
 # ---- Registration ----
 def register():
-    bpy.utils.register_class(FABNODES_Properties)
-    bpy.types.Scene.fabnodes_props = bpy.props.PointerProperty(type=FABNODES_Properties)
-    bpy.utils.register_class(FABNODES_PT_ExporterPanel)
-    bpy.utils.register_class(FABNODES_OT_ExportGCode)
+    bpy.utils.register_class(GcodeExportProperties)
+    bpy.types.Scene.fabnodes_props = bpy.props.PointerProperty(type=GcodeExportProperties)
+    bpy.utils.register_class(VIEW3D_PT_gcode_exporter)
+    bpy.utils.register_class(OBJECT_OT_gcode_export)
 
 
 def unregister():
     del bpy.types.Scene.fabnodes_props
-    bpy.utils.unregister_class(FABNODES_OT_ExportGCode)
-    bpy.utils.unregister_class(FABNODES_PT_ExporterPanel)
-    bpy.utils.unregister_class(FABNODES_Properties)
+    bpy.utils.unregister_class(OBJECT_OT_gcode_export)
+    bpy.utils.unregister_class(VIEW3D_PT_gcode_exporter)
+    bpy.utils.unregister_class(GcodeExportProperties)
 
 
 if __name__ == "__main__":

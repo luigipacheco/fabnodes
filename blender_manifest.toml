@@ -19,11 +19,12 @@ maintainer = "Luis Pacheco <luigi@neobrutal.com>"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc.
-# website = "https://www.luigipacheco.com"
+website = "https://www.luigipacheco.com/fabnodes"
+issues = "https://github.com/luigipacheco/fabnodes/issues"
 
 # # Optional: relevant tags from Blender's official tag list
 # # Full list: https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
-tags = ["Import-Export", "Geometry Nodes", "Text Editor"]
+tags = ["Import-Export", "Geometry Nodes"]
 
 # Minimum Blender version required for your addon
 blender_version_min = "4.2.0"
