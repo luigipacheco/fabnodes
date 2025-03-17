@@ -36,11 +36,11 @@ class GCode:
             command += f" F{speed}"
 
         if self.mode == "3dp" and extrude is not None:
-            command += f" E{extrude}"
+            command += f" E{extrude:.4f}"
         elif self.mode == "laser" and power is not None:
-            command += f" S{power}"
+            command += f" S{power:.4f}"
         elif self.mode == "cnc" and power is not None:
-            command += f" S{power}"
+            command += f" S{power:.4f}"
         elif self.mode == "draw":
             if draw and not self.pen_down:
                 self.set_pen_position(self.pen_down_angle)  # Lower pen
@@ -51,7 +51,7 @@ class GCode:
 
     def move_rapid(self, x, y, z):
         """Adds a rapid move (G0)"""
-        self.commands.append(f"G0 X{x} Y{y} Z{z}")
+        self.commands.append(f"G0 X{x:.4f} Y{y:.4f} Z{z:.4f}")
 
     def set_pen_position(self, angle):
         """Moves the servo to control pen up/down dynamically"""
