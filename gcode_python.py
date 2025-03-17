@@ -33,7 +33,7 @@ class GCode:
         """Adds a linear move (G1) with optional drawing"""
         command = f"G1 X{x:.4f} Y{y:.4f} Z{z:.4f}" 
         if speed:
-            command += f" F{speed}"
+            command += f" F{speed:.4f}"
 
         if self.mode == "3dp" and extrude is not None:
             command += f" E{extrude:.4f}"
