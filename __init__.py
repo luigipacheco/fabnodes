@@ -9,10 +9,31 @@ bl_info = {
 }
 
 import bpy
+import numpy as np
 from bpy.props import EnumProperty, FloatProperty, BoolProperty, PointerProperty
 from bpy.types import Panel, Operator, PropertyGroup
 from .gcode_python import GCode
 from . import slicer
+
+# attribute storage type -> numpy dtype for foreach_get bulk reads
+_ATTR_DTYPE = {'FLOAT': np.float32, 'INT': np.int32, 'BOOLEAN': bool}
+
+
+def _attr_values(mesh, name, expected_len):
+    """Bulk-read a scalar point attribute via foreach_get.
+    Returns a list of native Python values, or None if unavailable."""
+    att = mesh.attributes.get(name)
+    if att is None or att.domain != 'POINT' or len(att.data) != expected_len:
+        return None
+    dt = _ATTR_DTYPE.get(att.data_type)
+    if dt is None:                       # unusual type: slow but safe fallback
+        try:
+            return [d.value for d in att.data]
+        except AttributeError:
+            return None
+    buf = np.empty(expected_len, dtype=dt)
+    att.data.foreach_get("value", buf)
+    return buf.tolist()                  # native types for formatting/branching
 
 
 # ---- Property Group for Scene Settings ----
@@ -187,50 +208,48 @@ class OBJECT_OT_gcode_export(Operator):
         world_matrix = obj.matrix_world
         depsgraph = context.evaluated_depsgraph_get()
         eval_obj = obj.evaluated_get(depsgraph)
+        mesh = eval_obj.data
+        n_points = len(mesh.vertices)
 
-        positions = []
+        # ---- bulk position read (foreach_get) + one batched transform ----
         if position_source == 'global':
-            # Use global vertex positions - apply world matrix transformation
-            mesh = eval_obj.data
-            for vertex in mesh.vertices:
-                global_pos = world_matrix @ vertex.co
-                positions.append((global_pos.x * scale_factor, global_pos.y * scale_factor, global_pos.z * scale_factor))
-        else:  # position_source == 'attribute'
-            # Use position attribute directly - no world matrix transformation needed
-            if "position" in eval_obj.data.attributes:
-                for pos in eval_obj.data.attributes["position"].data:
-                    # Use position values directly as they already include transformations
-                    positions.append((pos.vector.x * scale_factor, pos.vector.y * scale_factor, pos.vector.z * scale_factor))
-
-        if not positions:
-            if position_source == 'attribute':
-                self.report({"WARNING"}, "No position attribute found. Switch to Global Position or add position attribute.")
-            else:
+            if n_points == 0:
                 self.report({"WARNING"}, "No vertices found in the mesh.")
-            return {"CANCELLED"}
+                return {"CANCELLED"}
+            buf = np.empty(n_points * 3, dtype=np.float32)
+            mesh.vertices.foreach_get("co", buf)
+            pts = buf.reshape(-1, 3).astype(np.float64)
+            m = np.array(world_matrix, dtype=np.float64)
+            pts = pts @ m[:3, :3].T + m[:3, 3]      # all points at once
+        else:  # position_source == 'attribute'
+            att = mesh.attributes.get("position")
+            if att is None or len(att.data) == 0:
+                self.report({"WARNING"}, "No position attribute found. Switch to Global Position or add position attribute.")
+                return {"CANCELLED"}
+            buf = np.empty(len(att.data) * 3, dtype=np.float32)
+            att.data.foreach_get("vector", buf)
+            pts = buf.reshape(-1, 3).astype(np.float64)
+            n_points = len(att.data)
 
-        # Retrieve optional attributes and verify data presence
-        speeds = eval_obj.data.attributes.get("speed", None)
-        extrudes = eval_obj.data.attributes.get("extrude", None)
-        powers = eval_obj.data.attributes.get("power", None)
-        draws = eval_obj.data.attributes.get("draw", None)  # Boolean attribute for drawing state
+        positions = (pts * scale_factor).tolist()
 
-        speeds = speeds.data if speeds else [None] * len(positions)
-        extrudes = extrudes.data if extrudes else [None] * len(positions)
-        powers = powers.data if powers else [None] * len(positions)
-        draws = draws.data if draws else [None] * len(positions)  # Default to no drawing
+        # ---- bulk attribute reads (only when enabled) ----
+        speeds   = _attr_values(mesh, "speed",   n_points) if scene_props.speeda   else None
+        extrudes = _attr_values(mesh, "extrude", n_points) if scene_props.extrudea else None
+        powers   = _attr_values(mesh, "power",   n_points) if scene_props.powera   else None
+        draws    = _attr_values(mesh, "draw",    n_points)
 
         print(f"Exporting {len(positions)} movements...")
 
-        # Generate G-code with drawing state
+        # plain O(n) emission loop - string building is list-based (O(n) total)
         for i, pos in enumerate(positions):
-            speed_value = speeds[i].value if (scene_props.speeda and speeds[i] and hasattr(speeds[i], 'value')) else speed_global
-            extrude_value = extrudes[i].value if (scene_props.extrudea and extrudes[i] and hasattr(extrudes[i], 'value')) else extrude_global
-            power_value = powers[i].value if (scene_props.powera and powers[i] and hasattr(powers[i], 'value')) else power_global
-            draw_state = bool(draws[i].value) if (draws[i] and hasattr(draws[i], 'value')) else False  # Default to False
-
-            gcode_program.move_linear(*pos, speed=speed_value, extrude=extrude_value, power=power_value, draw=draw_state)
-            print(f"Moving to {pos} with speed={speed_value}, extrude={extrude_value}, power={power_value}, draw={draw_state}")
+            gcode_program.move_linear(
+                pos[0], pos[1], pos[2],
+                speed=speeds[i] if speeds is not None else speed_global,
+                extrude=extrudes[i] if extrudes is not None else extrude_global,
+                power=powers[i] if powers is not None else power_global,
+                draw=bool(draws[i]) if draws is not None else False,
+            )
 
         # Custom end G-code
         if use_custom_gcode and scene_props.end_gcode:
