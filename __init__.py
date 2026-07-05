@@ -1,9 +1,9 @@
 bl_info = {
-    "name": "Fabnodes-Gcode Export",
+    "name": "Fabnodes",
     "author": "Luis Pacheco",
-    "description": "Export geometry node toolpaths to G-code",
+    "description": "Topology slicer and G-code export for geometry node toolpaths",
     "blender": (4, 0, 3),
-    "version": (0, 0, 2),
+    "version": (0, 1, 0),
     "location": "View3D > Sidebar > Fabnodes",
     "category": "Import-Export"
 }
@@ -12,6 +12,7 @@ import bpy
 from bpy.props import EnumProperty, FloatProperty, BoolProperty, PointerProperty
 from bpy.types import Panel, Operator, PropertyGroup
 from .gcode_python import GCode
+from . import slicer
 
 
 # ---- Property Group for Scene Settings ----
@@ -256,9 +257,11 @@ def register():
     bpy.utils.register_class(VIEW3D_PT_gcode_exporter)
     bpy.utils.register_class(VIEW3D_PT_gcode_help)
     bpy.utils.register_class(OBJECT_OT_gcode_export)
+    slicer.register()
 
 
 def unregister():
+    slicer.unregister()
     del bpy.types.Scene.fabnodes_props
     bpy.utils.unregister_class(OBJECT_OT_gcode_export)
     bpy.utils.unregister_class(VIEW3D_PT_gcode_help)

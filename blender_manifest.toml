@@ -4,13 +4,13 @@ schema_version = "1.0.0"
 id = "Fabnodes"
 
 # Version number of your addon
-version = "0.0.3"
+version = "0.1.0"
 
 # Display name of the addon
 name = "Fabnodes"
 
 # Short description of the addon
-tagline = "Generates G-Code from geometry node attributes"
+tagline = "Topology slicer and G-Code export from geometry node attributes"
 
 # Your name and contact email
 maintainer = "Luis Pacheco <luigi@neobrutal.com>"
