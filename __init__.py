@@ -1,10 +1,10 @@
 bl_info = {
-    "name": "Fabnodes",
+    "name": "GeoSlicer",
     "author": "Luis Pacheco",
     "description": "Topology slicer and G-code export for geometry node toolpaths",
     "blender": (4, 0, 3),
     "version": (0, 1, 0),
-    "location": "View3D > Sidebar > Fabnodes",
+    "location": "View3D > Sidebar > GeoSlicer",
     "category": "Import-Export"
 }
 
@@ -66,15 +66,15 @@ class GcodeExportProperties(PropertyGroup):
 
 # ---- UI Panel ----
 class VIEW3D_PT_gcode_exporter(Panel):
-    bl_label = "Fabnodes"
+    bl_label = "GeoSlicer"
     bl_idname = "VIEW3D_PT_gcode_exporter"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Fabnodes'
+    bl_category = 'GeoSlicer'
 
     def draw(self, context):
         layout = self.layout
-        scene_props = context.scene.fabnodes_props
+        scene_props = context.scene.geoslicer_props
 
         layout.prop(scene_props, "mode")
         
@@ -123,7 +123,7 @@ class VIEW3D_PT_gcode_help(Panel):
     bl_idname = "VIEW3D_PT_gcode_help"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Fabnodes'
+    bl_category = 'GeoSlicer'
     bl_options = {'DEFAULT_CLOSED'}
     bl_parent_id = "VIEW3D_PT_gcode_exporter"
 
@@ -179,7 +179,7 @@ class OBJECT_OT_gcode_export(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        scene_props = context.scene.fabnodes_props
+        scene_props = context.scene.geoslicer_props
         obj = context.object
 
         if not obj:
@@ -272,7 +272,7 @@ class OBJECT_OT_gcode_export(Operator):
 # ---- Registration ----
 def register():
     bpy.utils.register_class(GcodeExportProperties)
-    bpy.types.Scene.fabnodes_props = bpy.props.PointerProperty(type=GcodeExportProperties)
+    bpy.types.Scene.geoslicer_props = bpy.props.PointerProperty(type=GcodeExportProperties)
     bpy.utils.register_class(VIEW3D_PT_gcode_exporter)
     bpy.utils.register_class(VIEW3D_PT_gcode_help)
     bpy.utils.register_class(OBJECT_OT_gcode_export)
@@ -281,7 +281,7 @@ def register():
 
 def unregister():
     slicer.unregister()
-    del bpy.types.Scene.fabnodes_props
+    del bpy.types.Scene.geoslicer_props
     bpy.utils.unregister_class(OBJECT_OT_gcode_export)
     bpy.utils.unregister_class(VIEW3D_PT_gcode_help)
     bpy.utils.unregister_class(VIEW3D_PT_gcode_exporter)

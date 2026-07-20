@@ -1,10 +1,10 @@
-# Fabnodes-GCode Exporter 🛠️
+# GeoSlicer-GCode Exporter 🛠️
 
 ## 📌 Overview
-**Fabnodes-GCode Exporter** is a Blender addon that allows you to export **geometry node toolpaths** as **G-code** for CNC machines, 3D printers, laser cutters, and pen plotters.
+**GeoSlicer-GCode Exporter** is a Blender addon that allows you to export **geometry node toolpaths** as **G-code** for CNC machines, 3D printers, laser cutters, and pen plotters.
 
 ## 🚀 Features
-- **Topology Slicer** (View3D > Sidebar > Fabnodes > Slicer):
+- **Topology Slicer** (View3D > Sidebar > GeoSlicer > Slicer):
   - Slicing strategies: **Planar**, **Geodesic** (equal surface distance), **Vase** (topological, between boundary loops), **Weight** (paint your own slicing field, Tissue-style).
   - Layer modes: fixed **Count** or **Height** (count derived from max layer height).
   - Toolpath-aware output: seam alignment, ping-pong direction for open curves, uniform resampling, CCW loops ordered bottom-to-top.

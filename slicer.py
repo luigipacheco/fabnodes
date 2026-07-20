@@ -1,9 +1,9 @@
 """
-Fabnodes Topology Slicer
+GeoSlicer Topology Slicer
 ========================
 Non-planar slicing strategies (PLANAR | GEODESIC | VASE | WEIGHT) that turn a
 mesh into ordered toolpath curves, plus a converter to an ordered point mesh
-with fabnodes attributes (draw, path) ready for G-code export.
+with geoslicer attributes (draw, path) ready for G-code export.
 
 Numpy-vectorized core; scipy is used automatically if installed.
 """
@@ -677,7 +677,7 @@ class TOPOSLICE_OT_ToToolpath(bpy.types.Operator):
     bl_idname      = "toposlice.to_toolpath"
     bl_label       = "Make Toolpath Mesh"
     bl_description = ("Flatten the sliced curves into an ordered point mesh with "
-                      "fabnodes attributes (draw, path) for G-code export")
+                      "geoslicer attributes (draw, path) for G-code export")
     bl_options     = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -749,7 +749,7 @@ class TOPOSLICE_PT_Panel(bpy.types.Panel):
     bl_idname      = "TOPOSLICE_PT_panel"
     bl_space_type  = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category    = "Fabnodes"
+    bl_category    = "GeoSlicer"
 
     def draw(self, context):
         layout = self.layout

@@ -1,13 +1,13 @@
 schema_version = "1.0.0"
 
 # Unique identifier for your addon
-id = "Fabnodes"
+id = "GeoSlicer"
 
 # Version number of your addon
 version = "0.1.0"
 
 # Display name of the addon
-name = "Fabnodes"
+name = "GeoSlicer"
 
 # Short description of the addon
 tagline = "Topology slicer and G-Code export from geometry node attributes"
@@ -19,8 +19,8 @@ maintainer = "Luis Pacheco <luigi@neobrutal.com>"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc.
-website = "https://www.luigipacheco.com/fabnodes"
-issues = "https://github.com/luigipacheco/fabnodes/issues"
+website = "https://www.luigipacheco.com/geoslicer"
+issues = "https://github.com/luigipacheco/geoslicer/issues"
 
 # # Optional: relevant tags from Blender's official tag list
 # # Full list: https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
